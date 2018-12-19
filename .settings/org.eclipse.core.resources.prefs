@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java/material/controller/BaseController.java=UTF-8
+encoding//src/main/java/material/controller/DeptController.java=UTF-8
+encoding//src/main/java/material/controller/ModelController.java=UTF-8
+encoding//src/main/java/material/controller/TypeController.java=UTF-8
+encoding//src/main/java/material/controller/UserController.java=UTF-8
+encoding//src/main/java/material/mapper/DeptMapper.java=UTF-8
+encoding//src/main/java/material/mapper/TypeMapper.java=UTF-8
+encoding//src/main/java/material/pojo/Dept.java=UTF-8
+encoding//src/main/java/material/pojo/Type.java=UTF-8
+encoding//src/main/java/material/pojo/UserInfo.java=UTF-8
+encoding//src/main/java/material/service/UserServiceImpl.java=UTF-8

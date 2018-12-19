@@ -1,0 +1,4 @@
+0:0:0:0:0:0:0:1 - - [17/Dec/2018:22:08:35 +0800] "POST /material/company/tocreate HTTP/1.1" 200 4013 http-bio-8090-exec-3 184
+0:0:0:0:0:0:0:1 - - [17/Dec/2018:22:12:02 +0800] "POST /material/company/tocreate HTTP/1.1" 200 4093 http-bio-8090-exec-6 161
+0:0:0:0:0:0:0:1 - - [17/Dec/2018:22:14:24 +0800] "POST /material/company/tocreate HTTP/1.1" 200 3916 http-bio-8090-exec-1 151
+0:0:0:0:0:0:0:1 - - [17/Dec/2018:22:23:20 +0800] "POST /material/company/tocreate HTTP/1.1" 200 4133 http-bio-8090-exec-2 138

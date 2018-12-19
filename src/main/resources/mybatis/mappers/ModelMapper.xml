@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material.mapper.ModelMapper">
+  
+  <sql id="selectmodel">
+    SELECT * FROM model_tab m
+    LEFT JOIN 
+    (SELECT type_id,type_name FROM type_tab) t
+    ON m.parent_id=t.type_id
+  </sql>
+  
+  <resultMap type="ModelPojo" id="modelRM" autoMapping="true">
+  	<id column="model_id" property="modelId"/>
+  	<result column="price_latest" property="price"/>
+  	<result column="price_date" property="pDate"/>
+  	<association property="parentType" javaType="Type">
+  	  <id column="type_id" property="typeId"/>
+  	  <result column="type_name" property="typeName"/>
+  	</association>
+  	<association property="company" javaType="Company">
+  	  <id column="company_id" property="companyId"/>
+  	  <result column="company_name" property="companyName"/>
+  	  <result column="simple_name" property="simpleName"/>
+  	</association>
+  </resultMap>
+  
+  <select id="findAll" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  </select>
+  
+  <select id="findAllByType" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  	WHERE type_id=#{typeId}
+  </select>
+  
+  <update id="updateState">
+  	UPDATE model_tab SET state=#{state} WHERE model_id IN 
+  	<foreach collection="modelIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+    insert into model_tab (parent_id,amount,price_latest,price_date,model_str,state,unit,company_id) values(#{parentType.typeId},#{amount},#{price},#{pDate},#{modelStr},#{state},#{unit},#{company.companyId})
+  </insert>
+  
+  <select id="findOneByName" resultMap="modelRM">
+    <include refid="selectmodel"></include>
+    WHERE model_str=#{modelStr}
+  </select>
+  
+  <select id="findOneById" resultMap="modelRM">
+    <include refid="selectmodel"></include>
+    WHERE model_id=#{modelId}
+  </select>
+  
+  <update id="update">
+  	UPDATE model_tab SET model_str=#{modelStr},parent_id=#{parentType.typeId},amount=#{amount},price_latest=#{price},price_date=#{pDate},state=#{state},unit=#{unit},company_id=#{company.companyId} WHERE model_id=#{modelId};
+  </update>
+  
+  <delete id="delete">
+  	DELETE FROM model_tab WHERE model_id IN
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+  <!-- 
+  <update id="updateState">
+  	UPDATE type_tab SET state=#{state} WHERE type_id IN 
+  	<foreach collection="typeIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+  	insert into type_tab (type_id,type_name,state) values (#{typeId},#{typeName},#{state})
+  </insert>
+  
+  <select id="findOneById" resultType="Type">
+  	SELECT * FROM type_tab WHERE type_id=#{typeId};
+  </select>
+  
+  <update id="update">
+  	UPDATE type_tab SET type_name=#{typeName},state=#{state} WHERE type_id=#{typeId};
+  </update>
+  
+  <delete id="delete">
+  	DELETE FROM type_tab WHERE type_id IN
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+   -->
+</mapper>

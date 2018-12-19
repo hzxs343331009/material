@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material.mapper.TypeMapper">
+  
+  <select id="findAll" resultType="Type">
+  	SELECT * FROM type_tab;
+  </select>
+  <!-- 处理单个的state修改 -->
+<!--   <update id="updateState">
+  	update dept_p set state=#{state} where dept_id=#{deptId}
+  </update> -->
+  <update id="updateState">
+  	UPDATE type_tab SET state=#{state} WHERE type_id IN 
+  	<!-- collection赋值 三种 1.array 2.list 3.key -->
+  	<foreach collection="typeIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+  	insert into type_tab (type_id,type_name,state) values (#{typeId},#{typeName},#{state})
+  </insert>
+  
+  <select id="findOneById" resultType="Type">
+  	SELECT * FROM type_tab WHERE type_id=#{typeId};
+  </select>
+  
+  <update id="update">
+  	UPDATE type_tab SET type_name=#{typeName},state=#{state} WHERE type_id=#{typeId};
+  </update>
+  
+  <delete id="delete">
+  	DELETE FROM type_tab WHERE type_id IN
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+  
+</mapper>

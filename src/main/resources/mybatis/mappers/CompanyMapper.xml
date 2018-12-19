@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material.mapper.CompanyMapper">
+  
+  <select id="findAll" resultType="Company">
+    select * from company_tab
+  </select>
+  
+  <insert id="save">
+    insert into company_tab (company_name,simple_name,duty_no,user_company,state) values (#{companyName},#{simpleName},#{dutyNo},#{userCompany},#{state})
+  </insert>
+  
+  <update id="updataState">
+  	UPDATE company_tab SET state=#{state} WHERE company_id IN 
+  	<foreach collection="companyIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <select id="findCompanyByCompanyId" resultType="Company">
+    select * from company_tab where company_id=#{companyId}
+  </select>
+  
+  <select id="findAllGroupByCompanyName" resultType="Company">
+    select * from company_tab GROUP BY company_name
+  </select>
+
+  <!-- 
+  <sql id="selectmodel">
+    SELECT * FROM model_tab m
+    LEFT JOIN 
+    (SELECT type_id,type_name FROM type_tab) t
+    ON m.parent_id=t.type_id
+  </sql>
+  
+  <resultMap type="ModelPojo" id="modelRM" autoMapping="true">
+  	<id column="model_id" property="modelId"/>
+  	<result column="price_latest" property="price"/>
+  	<result column="price_date" property="pDate"/>
+  	<association property="parentType" javaType="Type">
+  	  <id column="type_id" property="typeId"/>
+  	  <result column="type_name" property="typeName"/>
+  	</association>
+  </resultMap>
+  
+  <select id="findAll" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  </select>
+  
+  <select id="findAllByType" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  	WHERE type_id=#{typeId}
+  </select>
+  
+  <update id="updateState">
+  	UPDATE model_tab SET state=#{state} WHERE model_id IN 
+  	<foreach collection="modelIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+    insert into model_tab (parent_id,amount,price_latest,price_date,model_str,state,unit) values(#{parentType.typeId},#{amount},#{price},#{pDate},#{modelStr},#{state},#{unit})
+  </insert>
+  <update id="updateState">
+  	UPDATE type_tab SET state=#{state} WHERE type_id IN 
+  	<foreach collection="typeIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+  	insert into type_tab (type_id,type_name,state) values (#{typeId},#{typeName},#{state})
+  </insert>
+  
+  <select id="findOneById" resultType="Type">
+  	SELECT * FROM type_tab WHERE type_id=#{typeId};
+  </select>
+  
+  <update id="update">
+  	UPDATE type_tab SET type_name=#{typeName},state=#{state} WHERE type_id=#{typeId};
+  </update>
+  
+  <delete id="delete">
+  	DELETE FROM type_tab WHERE type_id IN
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+   -->
+</mapper>

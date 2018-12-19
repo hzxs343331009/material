@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material.mapper.PriceLogMapper">
+  
+  <sql id="priceByModelSQL">
+    SELECT * FROM price_log_tab
+    LEFT JOIN 
+    (SELECT company_id,simple_name FROM company_tab) c
+    ON price_log_tab.company_id=c.company_id
+  </sql>
+  
+  <resultMap type="PriceLogPojo" id="priceRM" autoMapping="true">
+  	<id column="price_id" property="priceId"/>
+  	<association property="model" javaType="ModelPojo">
+  	  <id column="model_id" property="modelId"/>
+  	  <result column="model_str" property="modelStr"/>
+  	</association>
+  	<association property="company" javaType="Company">
+  	  <id column="company_id" property="companyId"/>
+  	  <result column="company_name" property="companyName"/>
+  	  <result column="simple_name" property="simpleName"/>
+  	</association>
+  </resultMap>
+  
+  <insert id="save">
+    insert into price_log_tab (model_id,price,create_date,company_id,state) values (#{model.modelId},#{price},#{createDate},#{company.companyId},#{state})
+  </insert>
+  
+  <select id="findAllByModelId" resultMap="priceRM">
+    SELECT * FROM 
+    (SELECT * FROM price_log_tab WHERE model_id=#{modelId}) p
+    LEFT JOIN 
+    (SELECT company_id,simple_name FROM company_tab) c
+    ON p.company_id=c.company_id
+  </select>
+  
+  <!-- 
+  <sql id="selectmodel">
+    SELECT * FROM model_tab m
+    LEFT JOIN 
+    (SELECT type_id,type_name FROM type_tab) t
+    ON m.parent_id=t.type_id
+  </sql>
+  
+  <resultMap type="ModelPojo" id="modelRM" autoMapping="true">
+  	<id column="model_id" property="modelId"/>
+  	<result column="price_latest" property="price"/>
+  	<result column="price_date" property="pDate"/>
+  	<association property="parentType" javaType="Type">
+  	  <id column="type_id" property="typeId"/>
+  	  <result column="type_name" property="typeName"/>
+  	</association>
+  </resultMap>
+  
+  <select id="findAll" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  </select>
+  
+  <select id="findAllByType" resultMap="modelRM">
+  	<include refid="selectmodel"></include>
+  	WHERE type_id=#{typeId}
+  </select>
+  
+  <update id="updateState">
+  	UPDATE model_tab SET state=#{state} WHERE model_id IN 
+  	<foreach collection="modelIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+    insert into model_tab (parent_id,amount,price_latest,price_date,model_str,state,unit) values(#{parentType.typeId},#{amount},#{price},#{pDate},#{modelStr},#{state},#{unit})
+  </insert>
+  <update id="updateState">
+  	UPDATE type_tab SET state=#{state} WHERE type_id IN 
+  	<foreach collection="typeIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <insert id="save">
+  	insert into type_tab (type_id,type_name,state) values (#{typeId},#{typeName},#{state})
+  </insert>
+  
+  <select id="findOneById" resultType="Type">
+  	SELECT * FROM type_tab WHERE type_id=#{typeId};
+  </select>
+  
+  <update id="update">
+  	UPDATE type_tab SET type_name=#{typeName},state=#{state} WHERE type_id=#{typeId};
+  </update>
+  
+  <delete id="delete">
+  	DELETE FROM type_tab WHERE type_id IN
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+   -->
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material.mapper.DeptMapper">
+
+  <sql id="selectdept">
+  SELECT * FROM
+dept_p d
+	LEFT JOIN
+(SELECT dept_id pid, dept_name pname FROM dept_p) p
+	ON d.PARENT_ID=p.pid
+  </sql>
+  
+  <resultMap type="Dept" id="deptRM" autoMapping="true">
+  	<id column="dept_id" property="deptId" />
+  	<association property="parentDept" javaType="Dept">
+  		<id column="pid" property="deptId" />
+  		<result column="pname" property="deptName" />
+  	</association>
+  </resultMap>
+  
+  <select id="findAll" resultMap="deptRM">
+  	<include refid="selectdept"></include>
+  </select>
+  <!-- 处理单个的state修改 -->
+<!--   <update id="updateState">
+  	update dept_p set state=#{state} where dept_id=#{deptId}
+  </update> -->
+  
+  <update id="updateState">
+  	UPDATE dept_p SET state=#{state} WHERE dept_id IN 
+  	<!-- collection赋值 三种 1.array 2.list 3.key -->
+  	<foreach collection="deptIds" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </update>
+  
+  <delete id="delete">
+  	delete from dept_p where dept_id in
+  	<foreach collection="array" open="(" close=")" item="id" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
+  
+  <insert id="save">
+  	insert into dept_p (dept_id,dept_name,state,parent_id) values (#{deptId},#{deptName},#{state},#{parentDept.deptId})
+  </insert>
+  
+  <select id="findOneById" resultMap="deptRM">
+  	<include refid="selectdept"></include>
+	WHERE dept_id=#{deptId}
+  </select>
+  
+  <update id="update">
+  	update dept_p set dept_name=#{deptName}, parent_id=#{parentDept.deptId}, state=#{state} where dept_id=#{deptId}
+  </update>
+  
+</mapper>
